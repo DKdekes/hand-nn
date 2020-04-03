@@ -1,8 +1,8 @@
 import numpy as np
-from hand.node.node import SigmoidalUnit
+from hand.node.SigmoidalUnit import SigmoidalUnit
 
 
-class Layer:
+class DenseLayer:
     def __init__(self, n_nodes, n_prev_nodes=None):
         if n_prev_nodes is None:
             n_prev_nodes = n_nodes
@@ -11,8 +11,9 @@ class Layer:
 
     def compute(self, x):
         output = np.zeros(self.n_nodes)
-        # double check enumerate()
         for i, node in enumerate(self.nodes):
             output[i] = node.compute(x)
         return output
 
+    def backward_propagate(self):
+        pass
