@@ -1,6 +1,6 @@
 import numpy as np
-from hand.activate.sigmoid import s, ds
-
+from hand.activate.sigmoid import sigmoid, d_sigmoid
+import random
 
 class SigmoidalUnit:
     def __init__(self, n_inputs):
@@ -15,8 +15,8 @@ class SigmoidalUnit:
             x = np.array([x])
         assert x.shape == self.w.shape
         z = np.dot(self.w, x) + self.bias
-        self.a = s(z)
-        self.da = ds(z)
+        self.a = sigmoid(z)
+        self.da = d_sigmoid(z)
         return self.a
 
 

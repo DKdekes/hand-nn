@@ -1,7 +1,9 @@
 import pandas as pd
+import random
 from hand.layer.dense import DenseLayer
 from hand.error.squared_error import C, dC
 import numpy as np
+
 
 
 class Network:
@@ -45,13 +47,13 @@ class Network:
                     error = 0.0
                     for node in self.model[i+1].nodes:
                         error += (node.w[j] * node.delta)
+                        error += (node.bias * node.delta)
                     errors.append(error)
             else:
                 for j in range(len(layer.nodes)):
                     node = layer.nodes[j]
                     errors.append(expected[j] - node.a)
-            for j in range(len(layer.nodes)):
-                node = layer.nodes[j]
+            for j, node in enumerate(layer.nodes):
                 node.delta = errors[j] * node.da
 
     def update_weights(self, x):
@@ -75,6 +77,12 @@ class Network:
                 self.update_weights(x_)
         print(self.forward_propagate(x))
 
+    def report_weights(self):
+        for i, layer in enumerate(self.model):
+            print('layer {}'.format(i))
+            for node in layer.nodes:
+                print(node.w)
+                print(node.bias)
 
 if __name__ == '__main__':
     n_inputs_ = 1
@@ -85,3 +93,4 @@ if __name__ == '__main__':
     x_train = df.loc[:, 'X'].values
     y_train = df.loc[:, 'y'].values
     network.train(x_train, y_train)
+    print(network.report_weights())
