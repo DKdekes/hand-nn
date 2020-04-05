@@ -1,7 +1,6 @@
 import pandas as pd
 import random
 from hand.layer.dense import DenseLayer
-from hand.error.squared_error import C, dC
 import numpy as np
 
 

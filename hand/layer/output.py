@@ -1,12 +1,12 @@
 import numpy as np
-from hand.node.SigmoidalUnit import SigmoidalUnit
+from hand.node.SigmoidNode import SigmoidNode
 
 class OutputLayer:
     def __init__(self, n_outputs, n_prev_nodes=None):
         if n_prev_nodes is None:
             n_prev_nodes = n_outputs
         self.n_outputs = n_outputs
-        self.outputs = [SigmoidalUnit(n_prev_nodes) for x in range(n_outputs)]
+        self.outputs = [SigmoidNode(n_prev_nodes) for x in range(n_outputs)]
         self.d = np.zeros(n_outputs)
 
     def compute(self, x):
