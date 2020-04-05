@@ -6,16 +6,8 @@ def s(x, c=1):
 
 
 def ds(x, c=1):
-    return s(x, c) * (1 - s(x, c))
-
-# good test
-def test_s():
-    for i in range(-4, 4):
-        print(i)
-        print(s(i, 3))
-        print()
-        print()
+    return x * (1 - c*x)
 
 
 if __name__ == '__main__':
-    test_s()
+    pass
