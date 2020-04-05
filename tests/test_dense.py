@@ -1,12 +1,12 @@
 import pytest
 from numpy import random
 random.seed(1)
-from hand.layer import dense
+from hand.layer import DenseLayer
 
 
 @pytest.fixture
 def dense_layer():
-    return dense.DenseLayer(1, 1)
+    return DenseLayer.DenseLayer(1, 1)
 
 
 def test_compute(dense_layer):

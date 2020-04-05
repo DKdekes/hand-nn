@@ -1,6 +1,6 @@
 import numpy as np
 from hand.activate.sigmoid import sigmoid, d_sigmoid
-import random
+
 
 class SigmoidNode:
     def __init__(self, n_inputs):

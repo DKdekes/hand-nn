@@ -1,8 +1,6 @@
 import pandas as pd
-import random
-from hand.layer.dense import DenseLayer
+from hand.layer.DenseLayer import DenseLayer
 import numpy as np
-
 
 
 class Network:
@@ -80,7 +78,9 @@ class Network:
         for i, layer in enumerate(self.model):
             print('layer {}'.format(i))
             for node in layer.nodes:
+                print('weights:')
                 print(node.w)
+                print('bias:')
                 print(node.bias)
 
 if __name__ == '__main__':

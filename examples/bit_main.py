@@ -1,5 +1,5 @@
 import pandas as pd
-from hand.network.network import Network
+from hand.network.Network import Network
 
 if __name__ == '__main__':
     n_inputs_ = 3

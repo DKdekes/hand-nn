@@ -1,6 +1,7 @@
 import numpy as np
 from hand.node.SigmoidNode import SigmoidNode
 
+
 class DenseLayer:
     def __init__(self, n_nodes, n_prev_nodes=None):
         self.n_nodes = n_nodes

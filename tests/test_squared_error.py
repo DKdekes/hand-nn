@@ -1,4 +1,3 @@
-import pytest
 from hand.error import squared_error
 
 
