@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class SigmoidNode:
+class ReluNode:
     def __init__(self, n_inputs):
         self.w = np.random.rand(n_inputs)
         self.z = None
@@ -16,15 +16,21 @@ class SigmoidNode:
         assert x.shape == self.w.shape
         dot = np.dot(self.w, x)
         self.z = dot + self.bias
-        self.a = self.sigmoid(self.z)
-        self.da = self.d_sigmoid(self.z)
+        self.a = self.relu(self.z)
+        self.da = self.d_relu(self.z)
         return self.a
 
-    def sigmoid(self, x, c=1):
-        return 1 / (1 + np.exp(-c * x))
+    def relu(self, x):
+        if x > 0:
+            return x
+        else:
+            return 0
 
-    def d_sigmoid(self, x, c=1):
-        return self.sigmoid(x) * (1 - self.sigmoid(x, c))
+    def d_relu(self, x):
+        if x > 0:
+            return 1
+        else:
+            return 0
 
 
 if __name__ == '__main__':

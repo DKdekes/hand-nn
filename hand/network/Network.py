@@ -4,10 +4,10 @@ import numpy as np
 
 
 class Network:
-    def __init__(self, n_inputs, hidden_layers, n_outputs):
+    def __init__(self, n_inputs, hidden_layers, n_outputs, learning_rate=0.01):
         self.model = []
         self.model.append(DenseLayer(n_inputs))
-        self.learning_rate = 0.1
+        self.learning_rate = learning_rate
         prev_nodes = n_inputs
         for n_nodes_layer in hidden_layers:
             self.model.append(DenseLayer(n_nodes_layer, prev_nodes))
@@ -21,7 +21,7 @@ class Network:
         return str
 
     def forward_propagate(self, x):
-        if x.shape == ():
+        if isinstance(x, int) or x.shape == ():
             x = np.array([x])
         res = []
         for row in x:
@@ -31,11 +31,8 @@ class Network:
         return res
 
     def backward_propagate(self, expected):
-        if expected.shape == ():
+        if isinstance(expected, int) or expected.shape == ():
             expected = np.array([expected])
-        # bias won't be adjusted yet?
-        # add bias to backprop step
-        # node.delta may always be zero
         for i in reversed(range(len(self.model))):
             layer = self.model[i]
             errors = []
@@ -44,7 +41,6 @@ class Network:
                     error = 0.0
                     for node in self.model[i+1].nodes:
                         error += (node.w[j] * node.delta)
-                        error += (node.bias * node.delta)
                     errors.append(error)
             else:
                 for j in range(len(layer.nodes)):
@@ -54,15 +50,17 @@ class Network:
                 node.delta = errors[j] * node.da
 
     def update_weights(self, x):
-        if x.shape == ():
+        if isinstance(x, int) or x.shape == ():
             x = np.array([x])
         for i in range(len(self.model)):
-            inputs = x
             if i != 0:
                 inputs = [node.a for node in self.model[i-1].nodes]
+            else:
+                inputs = x
             for node in self.model[i].nodes:
                 for j in range(len(inputs)):
-                    node.w[j] += self.learning_rate * node.delta * inputs[j]
+                    weight_change = self.learning_rate * node.delta * inputs[j]
+                    node.w[j] += weight_change
                 node.bias += self.learning_rate * node.delta
 
     def train(self, x, y, epochs=10):
@@ -72,7 +70,6 @@ class Network:
                 self.forward_propagate(x_)
                 self.backward_propagate(y_)
                 self.update_weights(x_)
-        print(self.forward_propagate(x))
 
     def report_weights(self):
         for i, layer in enumerate(self.model):
@@ -83,6 +80,7 @@ class Network:
                 print('bias:')
                 print(node.bias)
 
+
 if __name__ == '__main__':
     n_inputs_ = 1
     hidden_layers_ = [1]
@@ -91,5 +89,6 @@ if __name__ == '__main__':
     df = pd.read_csv('../../data/linear_data.csv')
     x_train = df.loc[:, 'X'].values
     y_train = df.loc[:, 'y'].values
-    network.train(x_train, y_train)
-    print(network.report_weights())
+    network.train(x_train, y_train, epochs=1000)
+    print(network.forward_propagate(x_train))
+    network.report_weights()
