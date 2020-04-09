@@ -6,7 +6,6 @@ import numpy as np
 class Network:
     def __init__(self, n_inputs, hidden_layers, n_outputs, learning_rate=0.01):
         self.model = []
-        self.model.append(DenseLayer(n_inputs))
         self.learning_rate = learning_rate
         prev_nodes = n_inputs
         for n_nodes_layer in hidden_layers:
@@ -24,10 +23,10 @@ class Network:
         if isinstance(x, int) or x.shape == ():
             x = np.array([x])
         res = []
-        for row in x:
-            for layer in self.model:
-                row = layer.compute(row)
-            res.append(row)
+        row = x
+        for layer in self.model:
+            row = layer.compute(row)
+        res.append(row)
         return res
 
     def backward_propagate(self, expected):

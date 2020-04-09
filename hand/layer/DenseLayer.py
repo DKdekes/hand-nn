@@ -12,10 +12,10 @@ class DenseLayer:
             self.nodes = [SigmoidNode(n_prev_nodes) for x in range(n_nodes)]
 
     def compute(self, x):
-        if isinstance(x, int) or x.shape == ():
-            x = np.array([x])
         if isinstance(x, list):
             x = np.array(x)
+        elif isinstance(x, int) or x.shape == ():
+            x = np.array([x])
         output = np.zeros(self.n_nodes)
         for i, node in enumerate(self.nodes):
             output[i] = node.compute(x)

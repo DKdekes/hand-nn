@@ -11,7 +11,9 @@ class ReluNode:
         self.bias = np.random.rand()
 
     def compute(self, x):
-        if isinstance(x, int) or x.shape == ():
+        if isinstance(x, list):
+            x = np.array(x)
+        elif isinstance(x, int) or x.shape == ():
             x = np.array([x])
         assert x.shape == self.w.shape
         dot = np.dot(self.w, x)
@@ -30,7 +32,7 @@ class ReluNode:
         if x > 0:
             return 1
         else:
-            return 0
+            return 0.001
 
 
 if __name__ == '__main__':
