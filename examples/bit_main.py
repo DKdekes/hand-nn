@@ -10,6 +10,9 @@ if __name__ == '__main__':
     x_train = df.loc[:, 'bit_3':'bit_1'].values
     y_train = df.loc[:, 'target'].values
     network.train(x_train, y_train, epochs=1000)
+    predictions = []
     for x, y in zip(x_train, y_train):
-        print(network.forward_propagate(x))
-    print(y_train)
+        predictions.append(network.forward_propagate(x))
+    print('predictions: {}'.format([x[0][0] for x in predictions]))
+    print('labels:      {}'.format(y_train))
+
