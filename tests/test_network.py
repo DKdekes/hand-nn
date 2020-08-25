@@ -63,9 +63,9 @@ def test_backward_propogate_simple(network_simple):
     label = 0
     network_simple.forward_propagate(x)
     network_simple.backward_propagate(label)
-    assert network_simple.model[2].nodes[0].delta == -0.1349603084197159
-    assert network_simple.model[1].nodes[0].delta == -0.00484004464901974
-    assert network_simple.model[0].nodes[0].delta == -1.0177676543954743e-07
+    assert network_simple.layers[2].nodes[0].delta == -0.1349603084197159
+    assert network_simple.layers[1].nodes[0].delta == -0.00484004464901974
+    assert network_simple.layers[0].nodes[0].delta == -1.0177676543954743e-07
 
 
 def test_update_weights_simple(network_simple):
@@ -73,9 +73,9 @@ def test_update_weights_simple(network_simple):
     label = 0
     network_simple.forward_propagate(x)
     network_simple.backward_propagate(label)
-    assert network_simple.model[2].nodes[0].bias == 0.0923385947687978
+    assert network_simple.layers[2].nodes[0].bias == 0.0923385947687978
     network_simple.update_weights(x)
-    assert network_simple.model[2].nodes[0].bias == 0.02485844055893985
+    assert network_simple.layers[2].nodes[0].bias == 0.02485844055893985
 
 
 def test_train(network_simple):
