@@ -54,7 +54,7 @@ class SigmoidNode:
         dot = np.dot(self.w, x)
         self.z = dot + self.bias
         self.a = self.sigmoid(self.z)
-        # todo: should this be += ?
+        # should this be += ?
         self.da = self.d_sigmoid(self.z)
         return self.a
 

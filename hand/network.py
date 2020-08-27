@@ -21,6 +21,7 @@ class Network:
     def forward_propagate(self, x):
         if isinstance(x, int) or x.shape == ():
             x = np.array([x])
+        x = np.array([x]).reshape(1, -1)
         res = []
         row = x
         for layer in self.layers:
@@ -33,23 +34,12 @@ class Network:
             expected = np.array([expected])
         for i in reversed(range(len(self.layers))):
             layer = self.layers[i]
-            errors = []
             if i == len(self.layers) - 1:
                 # output layer processing
-                # matrix operation candidate
-                for j in range(len(layer.nodes)):
-                    node = layer.nodes[j]
-                    errors.append(expected[j] - node.a)
+                error = expected - layer.a
             else:
-                for j in range(len(layer.nodes)):
-                    error = 0.0
-                    # matrix operation candidate
-                    for node in self.layers[i + 1].nodes:
-                        error += (node.w[j] * node.delta)
-                    errors.append(error)
-            # matrix operation candidate
-            for j, node in enumerate(layer.nodes):
-                node.delta = errors[j] * node.da
+                error = np.multiply(self.layers[i+1].w, self.layers[i+1].delta)
+            layer.delta = np.multiply(error, layer.da.reshape(-1, 1))
 
     def update_weights(self, x):
         if isinstance(x, int) or x.shape == ():
@@ -59,16 +49,14 @@ class Network:
                 # input layer processing
                 inputs = x
             else:
-                inputs = [node.a for node in self.layers[i - 1].nodes]
+                inputs = self.layers[i - 1].a
             # matrix operation candidate
-            for node in self.layers[i].nodes:
-                for j in range(len(inputs)):
-                    weight_change = self.learning_rate * node.delta * inputs[j]
-                    node.w[j] += weight_change
-                node.bias += self.learning_rate * node.delta
+            layer = self.layers[i]
+            layer.w += self.learning_rate * np.multiply(layer.delta, inputs).T
+            layer.bias += self.learning_rate * layer.delta.T
 
     def train(self, x, y, epochs=10):
-        # does not train in batches currently. each epoch is a batch
+        # does not train in batches currently. batch size = 1 training example
         for i in range(epochs):
             for x_, y_ in zip(x, y):
                 self.forward_propagate(x_)
