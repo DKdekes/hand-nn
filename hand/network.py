@@ -26,22 +26,25 @@ class Network:
         row = x
         for layer in self.layers:
             row = layer.compute(row)
-        res.append(row)
-        return res
+        return row[0]
 
     def backward_propagate(self, expected):
+        if isinstance(expected, list):
+            expected = np.array(expected)
         if isinstance(expected, int) or expected.shape == ():
             expected = np.array([expected])
         for i in reversed(range(len(self.layers))):
             layer = self.layers[i]
             if i == len(self.layers) - 1:
                 # output layer processing
-                error = expected - layer.a
+                error = (expected - layer.a).reshape(-1, 1)
             else:
-                error = np.multiply(self.layers[i+1].w, self.layers[i+1].delta)
+                error = np.matmul(self.layers[i+1].w, self.layers[i+1].delta)
             layer.delta = np.multiply(error, layer.da.reshape(-1, 1))
 
     def update_weights(self, x):
+        if isinstance(x, list):
+            x = np.array(x)
         if isinstance(x, int) or x.shape == ():
             x = np.array([x])
         for i in range(len(self.layers)):
@@ -55,7 +58,7 @@ class Network:
             layer.w += self.learning_rate * np.multiply(layer.delta, inputs).T
             layer.bias += self.learning_rate * layer.delta.T
 
-    def train(self, x, y, epochs=10):
+    def train(self, x: np.array, y: np.array, epochs=10):
         # does not train in batches currently. batch size = 1 training example
         for i in range(epochs):
             for x_, y_ in zip(x, y):
