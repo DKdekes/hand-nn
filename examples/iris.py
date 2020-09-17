@@ -1,23 +1,38 @@
 import pandas as pd
 from hand import Network
+from sklearn.model_selection import train_test_split
+from hand import accuracy
+import numpy as np
 
 if __name__ == '__main__':
-    n_inputs_ = 4
-    hidden_layers_ = [3]
-    n_outputs_ = 3
-    network = Network(n_inputs_, hidden_layers_, n_outputs_)
+    # data
     df = pd.read_csv('../data/iris.data')
     df = df.sample(frac=1).reset_index(drop=True)
-    x_train = df.loc[:, 'f1':'f4'].values
-    y_train = df.loc[:, 'y']
+    x = df.loc[:, 'f1':'f4'].values
+    y_temp = df.loc[:, 'y']
     encoder = {
-        'Iris-setosa': [1, 0, 0],
-        'Iris-versicolor': [0, 1, 0],
-        'Iris-virginica': [0, 0, 1],
+        'Iris-setosa': np.array([1, 0, 0]),
+        'Iris-versicolor': np.array([0, 1, 0]),
+        'Iris-virginica': np.array([0, 0, 1]),
     }
-    y_train = y_train.map(encoder).values
+    y = []
+    for y_ in y_temp:
+        y.append(encoder[y_])
+    y = np.array(y)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.33)
+
+    # model
+    n_inputs_ = x.shape[1]
+    hidden_layers_ = [5]
+    n_outputs_ = y.shape[1]
+    network = Network(n_inputs_, hidden_layers_, n_outputs_)
     network.train(x_train, y_train, epochs=100)
     predictions = []
-    for x, y in zip(x_train, y_train):
+    for x, y in zip(x_test, y_test):
         print('expecting: {}'.format(y))
+        prediction = network.predict(x)
         print('got: {}'.format(network.forward_propagate(x)))
+        predictions.append(prediction)
+    predictions = np.array(predictions)
+    print(accuracy(predictions, y_test))
+    print(network.report_weights())

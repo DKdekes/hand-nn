@@ -18,11 +18,17 @@ class Network:
             str += ' {}'.format(layer.n_nodes)
         return str
 
+    def predict(self, x):
+        raw_pred = self.forward_propagate(x)
+        idx = np.argmax(raw_pred)
+        ret = np.zeros(raw_pred.shape)
+        ret[idx] = 1
+        return ret.astype('int32')
+
     def forward_propagate(self, x):
         if isinstance(x, int) or x.shape == ():
             x = np.array([x])
         x = np.array([x]).reshape(1, -1)
-        res = []
         row = x
         for layer in self.layers:
             row = layer.compute(row)
@@ -36,7 +42,6 @@ class Network:
         for i in reversed(range(len(self.layers))):
             layer = self.layers[i]
             if i == len(self.layers) - 1:
-                # output layer processing
                 error = (expected - layer.a).reshape(-1, 1)
             else:
                 error = np.matmul(self.layers[i+1].w, self.layers[i+1].delta)
@@ -49,17 +54,15 @@ class Network:
             x = np.array([x])
         for i in range(len(self.layers)):
             if i == 0:
-                # input layer processing
                 inputs = x
             else:
                 inputs = self.layers[i - 1].a
-            # matrix operation candidate
             layer = self.layers[i]
             layer.w += self.learning_rate * np.multiply(layer.delta, inputs).T
             layer.bias += self.learning_rate * layer.delta.T
 
     def train(self, x: np.array, y: np.array, epochs=10):
-        # does not train in batches currently. batch size = 1 training example
+        # currently only supports SGD
         for i in range(epochs):
             for x_, y_ in zip(x, y):
                 self.forward_propagate(x_)
@@ -69,8 +72,7 @@ class Network:
     def report_weights(self):
         for i, layer in enumerate(self.layers):
             print('layer {}'.format(i))
-            for node in layer.nodes:
-                print('weights:')
-                print(node.w)
-                print('bias:')
-                print(node.bias)
+            print('weights:')
+            print(layer.w)
+            print('bias:')
+            print(layer.bias)
