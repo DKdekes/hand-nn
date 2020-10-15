@@ -1,7 +1,6 @@
 import pandas as pd
-from hand import Network
+from hand import Network, accuracy
 from sklearn.model_selection import train_test_split
-from hand import accuracy
 import numpy as np
 
 if __name__ == '__main__':
@@ -31,7 +30,7 @@ if __name__ == '__main__':
     for x, y in zip(x_test, y_test):
         print('expecting: {}'.format(y))
         prediction = network.predict(x)
-        print('got: {}'.format(network.forward_propagate(x)))
+        print('got: {}'.format(network.predict(x)))
         predictions.append(prediction)
     predictions = np.array(predictions)
     print(accuracy(predictions, y_test))
