@@ -28,10 +28,7 @@ if __name__ == '__main__':
     network.train(x_train, y_train, epochs=100)
     predictions = []
     for x, y in zip(x_test, y_test):
-        print('expecting: {}'.format(y))
         prediction = network.predict(x)
-        print('got: {}'.format(network.predict(x)))
         predictions.append(prediction)
     predictions = np.array(predictions)
     print(accuracy(predictions, y_test))
-    print(network.report_weights())
