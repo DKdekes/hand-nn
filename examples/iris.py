@@ -1,5 +1,5 @@
 import pandas as pd
-from hand import Network, accuracy
+from hand import Model, accuracy
 from sklearn.model_selection import train_test_split
 import numpy as np
 
@@ -24,7 +24,7 @@ if __name__ == '__main__':
     n_inputs_ = x.shape[1]
     hidden_layers_ = [5]
     n_outputs_ = y.shape[1]
-    network = Network(n_inputs_, hidden_layers_, n_outputs_)
+    network = Model(n_inputs_, hidden_layers_, n_outputs_)
     network.train(x_train, y_train, epochs=100)
     predictions = []
     for x, y in zip(x_test, y_test):

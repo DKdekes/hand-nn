@@ -1,23 +1,10 @@
 import numpy as np
+from hand.module import Module
 
 
-def squared_error(y, y_p):
-    if isinstance(y, int) or y.shape == ():
-        y = np.array([y])
-    if isinstance(y_p, int) or y_p.shape == ():
-        y_p = np.array([y_p])
-    return np.sum(np.square(y - y_p))
+class Mse(Module):
+    def forward(self, inp, target):
+        return (inp.squeeze() - target).pow(2).mean()
 
-
-def d_squared_error(y, y_p):
-    if isinstance(y, int) or y.shape == ():
-        y = np.array([y])
-    if isinstance(y_p, int) or y_p.shape == ():
-        y_p = np.array([y_p])
-    return np.sum(2 * (y - y_p))
-
-
-if __name__ == '__main__':
-    y_ = 1
-    y_p_ = 2
-    squared_error(y_, y_p_)
+    def bwd(self, out, inp, target):
+        inp.g = 2 * (inp.squeeze() - target).unsqueeze(-1) / target.shape[0]

@@ -1,14 +1,14 @@
 import numpy as np
+from hand.module import Module
 
 
-def relu_single(x):
-    return x if x > 0 else 0.001 * x
+class Relu(Module):
+    """ Relu activation function
 
 
-relu = np.vectorize(relu_single)
+    """
+    def forward(self, inp):
+        print(f'{__name__} forward')
+        return inp.clamp_min(0.) - 0.5
 
-
-def d_relu(x):
-    x[x <= 0] = 0.001
-    x[x > 0] = 1
-    return x
+    def bwd(self, output, inp): inp.g = (inp > 0).float() * output.g

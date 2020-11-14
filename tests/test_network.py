@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 np.random.seed(1)
-from hand.network.Network import Network
+from hand.model.Network import Network
 
  
 @pytest.fixture

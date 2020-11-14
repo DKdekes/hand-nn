@@ -1,2 +1,2 @@
-from .network import Network
+from .model import Model
 from .utils import accuracy
