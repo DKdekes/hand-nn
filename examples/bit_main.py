@@ -34,5 +34,8 @@ if __name__ == '__main__':
     ])
 
     # train model
-    loss = model(x_train, y_train)
-    model.backward()
+    for _ in range(1000):
+        loss = model(x_train, y_train)
+        model.backward()
+
+    print(model(x_train, y_train))

@@ -2,17 +2,40 @@ from hand.error import Mse
 
 
 class Model:
-    def __init__(self, layers, loss='mse'):
+    """
+    the top level module for creating networks
+
+    usage:
+        model = Model([
+            Linear(),
+            Relu(),
+            Linear()
+        ])
+
+    it would be nice to have an inference mode
+    """
+    def __init__(self, layers, loss='mse', lr=None):
+        """
+
+        :param layers: a list of instantiated layers
+        :param loss: kind of loss function to use
+        :param lr: learning rate. defined at layer level, but can also be defined at model level
+        """
         self.layers = layers
+        # loss func set
         if loss == 'mse':
             self.loss = Mse()
         else:
             raise Exception(f'{loss} not implemented')
+        # global lr set
+        if lr:
+            for layer in self.layers:
+                layer.lr = lr
 
     def __call__(self, x, target):
         for layer in self.layers:
             x = layer(x)
-        return self.loss(x, target)
+        return x, self.loss(x, target)
 
     def backward(self):
         self.loss.backward()
