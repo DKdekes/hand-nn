@@ -1,8 +1,9 @@
 from hand.module import Module
+from hand import initialize
 
 
 class Linear(Module):
-    def __init__(self, w, b, lr=0.01):
+    def __init__(self, units, n_in=None, n_out=None, weight_init='he', bias_init='zeros', lr=0.01):
         """
 
         :param w: weight tensor
@@ -10,9 +11,20 @@ class Linear(Module):
         :param lr: learning rate. want to experiment with multiple learning rates in future, so the learning
         rate is defined at the layer level for now
         """
-        self.w = w
-        self.b = b
+        self.n_in = n_in
+        self.n_out = n_out
+        self.w = None
+        self.b = None
+        self.units = units
         self.lr = lr
+        self.w_init = getattr(initialize, weight_init)
+        self.b_init = getattr(initialize, bias_init)
+
+    def setup(self, inputs):
+        assert self.w is None
+        assert self.b is None
+        self.w = self.w_init(inputs, self.units)
+        self.b = self.b_init(1, self.units)
 
     def forward(self, inp):
         return inp @ self.w + self.b
