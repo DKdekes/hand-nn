@@ -1,4 +1,4 @@
-from hand.error import Mse
+from hand import error
 
 
 class Model:
@@ -23,10 +23,7 @@ class Model:
         self.layers = layers
 
         # loss setup
-        if loss == 'mse':
-            self.loss = Mse()
-        else:
-            raise Exception(f'{loss} not implemented')
+        self.loss = getattr(error, loss)()
 
         # learning rate setup
         if lr:

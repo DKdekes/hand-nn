@@ -1,5 +1,6 @@
 import numpy as np
 from hand.module import Module
+import sys
 
 
 class Mse(Module):
@@ -21,3 +22,9 @@ class Mse(Module):
         :return:
         """
         inp.g = 2 * (inp.squeeze() - target).unsqueeze(-1) / target.shape[0]
+
+
+def __getattr__(item):
+    for a in globals():
+        if a.lower() == item.lower():
+            return globals()[a]

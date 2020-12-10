@@ -1,7 +1,12 @@
 import pandas as pd
+from torch import tensor
+
 from hand import Model, accuracy
 from sklearn.model_selection import train_test_split
 import numpy as np
+
+from hand.activation import Relu
+from hand.layer import Linear
 
 if __name__ == '__main__':
     # data
@@ -18,17 +23,28 @@ if __name__ == '__main__':
     for y_ in y_temp:
         y.append(encoder[y_])
     y = np.array(y)
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.33)
+    x_train, x_test, y_train, y_test = map(lambda _x: tensor(_x).float(), train_test_split(x, y, test_size=0.33))
+
+    num_features = x_train.shape[1]
+    num_classes = y_train.shape[1]
 
     # model
-    n_inputs_ = x.shape[1]
-    hidden_layers_ = [5]
-    n_outputs_ = y.shape[1]
-    network = Model(n_inputs_, hidden_layers_, n_outputs_)
-    network.train(x_train, y_train, epochs=100)
+    model = Model([
+        Linear(256, n_in=num_features),
+        Relu(),
+        Linear(256),
+        Relu(),
+        Linear(num_classes)
+    ])
+
+    # train model
+    for _ in range(1000):
+        loss = model(x_train, y_train)
+        model.backward()
+
     predictions = []
     for x, y in zip(x_test, y_test):
-        prediction = network.predict(x)
+        prediction = model(x)
         predictions.append(prediction)
     predictions = np.array(predictions)
     print(accuracy(predictions, y_test))
