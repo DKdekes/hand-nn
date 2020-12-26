@@ -39,6 +39,7 @@ class Model:
                 layer.setup(weight_layers[i - 1].units)
 
     def __call__(self, x, target):
+        assert len(target.shape) != 1, 'target variables cannot be stored in 1d tensor'
         for layer in self.layers:
             x = layer(x)
         return x, self.loss(x, target)

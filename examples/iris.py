@@ -44,7 +44,7 @@ if __name__ == '__main__':
 
     predictions = []
     for x, y in zip(x_test, y_test):
-        prediction = model(x)
+        prediction = model(x, y)[0]
         predictions.append(prediction)
-    predictions = np.array(predictions)
-    print(accuracy(predictions, y_test))
+    predictions_arr = np.array(predictions)
+    print(accuracy(predictions_arr, y_test))

@@ -41,4 +41,8 @@ class Linear(Module):
         :return:
         """
         self.w -= self.w.g * self.lr
+
         self.b -= self.b.g * self.lr
+
+    def __str__(self):
+        return f'{self.units} units. {self.n_in} in. {self.n_out} out'

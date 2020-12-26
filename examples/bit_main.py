@@ -9,11 +9,10 @@ from hand.layer import Linear
 if __name__ == '__main__':
     df = pd.read_csv('../data/bit_data.csv')
     x_train = df.loc[:, 'bit_3':'bit_1'].values
-    y_train = df.loc[:, 'target'].values
+    y_train = df.loc[:, 'target'].values.reshape(-1, 1)
 
     x_train, y_train = map(tensor, (x_train, y_train))
-    x_train = x_train.float()
-    y_train = y_train.float()
+    x_train, y_train = map(lambda x: x.float(), (x_train, y_train))
 
     num_features = x_train.shape[1]
     num_classes = 1
