@@ -25,8 +25,6 @@ class Mse(Module):
         :return: nothing. sets the input gradient
         """
         target_diff = inp - target
-        assert target_diff.shape[1] == 1, \
-            'target diff cannot have multiple columns (there can only be one difference per example'
         inp.g = 2 * target_diff / target.shape[0]
 
 

@@ -1,9 +1,10 @@
 import pandas as pd
 from torch import tensor
 
-from hand import Model, accuracy
+from hand import Model, accuracy, Dataset
 from sklearn.model_selection import train_test_split
 import numpy as np
+import torch
 
 from hand.activation import Relu
 from hand.layer import Linear
@@ -37,14 +38,23 @@ if __name__ == '__main__':
         Linear(num_classes)
     ])
 
-    # train model
-    for _ in range(1000):
-        loss = model(x_train, y_train)
-        model.backward()
+    # dataset
+    train_dataset = Dataset(x_train, y_train)
 
+    # train model
+    # epochs
+    for _ in range(5):
+        # batches
+        for x_batch, y_batch in train_dataset:
+            loss = model(x_batch, y_batch)
+            model.backward()
+
+    model.eval()
     predictions = []
+    probs = []
     for x, y in zip(x_test, y_test):
-        prediction = model(x, y)[0]
+        prediction, prob = model(x, y)
         predictions.append(prediction)
-    predictions_arr = np.array(predictions)
+        probs.append(prob)
+    predictions_arr = torch.stack(predictions)
     print(accuracy(predictions_arr, y_test))

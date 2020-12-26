@@ -1,4 +1,5 @@
 from hand import error
+import torch
 
 
 class Model:
@@ -21,6 +22,7 @@ class Model:
         :param lr: learning rate. defined at layer level, but can also be defined at model level
         """
         self.layers = layers
+        self.train = True
 
         # loss setup
         self.loss = getattr(error, loss)()
@@ -38,13 +40,26 @@ class Model:
             else:
                 layer.setup(weight_layers[i - 1].units)
 
+    def eval(self):
+        self.train = False
+
     def __call__(self, x, target):
-        assert len(target.shape) != 1, 'target variables cannot be stored in 1d tensor'
-        for layer in self.layers:
-            x = layer(x)
-        return x, self.loss(x, target)
+        if self.train:
+            assert len(target.shape) != 1, 'target variables cannot be stored in 1d tensor'
+            for layer in self.layers:
+                x = layer(x)
+            return x, self.loss(x, target)
+        else:
+            for layer in self.layers:
+                x = layer(x)
+            ret = torch.zeros(x.shape)
+            ret[0, torch.argmax(x)] = 1
+            return ret.squeeze(), x
 
     def backward(self):
         self.loss.backward()
         for layer in reversed(self.layers):
             layer.backward()
+
+    def __str__(self):
+        return [layer.__str__ for layer in self.layers]

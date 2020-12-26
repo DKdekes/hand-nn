@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def accuracy(predictions: np.array, targets: np.array) -> float:
+def accuracy(predictions, targets) -> float:
     assert predictions.shape == targets.shape
     assert predictions.dtype == targets.dtype
     num_correct = 0
