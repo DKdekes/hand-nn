@@ -27,6 +27,9 @@ class Mse(Module):
         target_diff = inp - target
         inp.g = 2 * target_diff / target.shape[0]
 
+    def __str__(self):
+        return 'mse'
+
 
 def __getattr__(item):
     for a in globals():

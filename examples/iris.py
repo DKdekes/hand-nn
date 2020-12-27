@@ -29,6 +29,11 @@ if __name__ == '__main__':
     num_features = x_train.shape[1]
     num_classes = y_train.shape[1]
 
+    # normalize
+    max = torch.max(x_train)
+
+    x_train, x_test = map(lambda _x: _x / max, (x_train, x_test))
+
     # model
     model = Model([
         Linear(256, n_in=num_features),
@@ -37,6 +42,8 @@ if __name__ == '__main__':
         Relu(),
         Linear(num_classes)
     ])
+
+    print(model)
 
     # dataset
     train_dataset = Dataset(x_train, y_train)

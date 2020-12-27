@@ -62,4 +62,4 @@ class Model:
             layer.backward()
 
     def __str__(self):
-        return [layer.__str__ for layer in self.layers]
+        return str([layer.__str__() for layer in self.layers])
