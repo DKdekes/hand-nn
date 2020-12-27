@@ -41,16 +41,16 @@ if __name__ == '__main__':
         Linear(256),
         Relu(),
         Linear(num_classes)
-    ])
+    ], lr=0.01)
 
     print(model)
 
     # dataset
-    train_dataset = Dataset(x_train, y_train)
+    train_dataset = Dataset(x_train, y_train, bs=1)
 
     # train model
     # epochs
-    for _ in range(5):
+    for _ in range(15):
         # batches
         for x_batch, y_batch in train_dataset:
             loss = model(x_batch, y_batch)
