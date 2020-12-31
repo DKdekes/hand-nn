@@ -25,7 +25,8 @@ class Mse(Module):
         :return: nothing. sets the input gradient
         """
         target_diff = inp - target
-        inp.g = 2 * target_diff / target.shape[0]
+        grad = 2 * target_diff / target.shape[0]
+        inp.g = grad
 
     def __str__(self):
         return 'mse'

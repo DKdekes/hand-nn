@@ -1,6 +1,6 @@
 from hand import error
 import torch
-
+import logging
 
 class Model:
     """
@@ -21,6 +21,9 @@ class Model:
         :param loss: kind of loss function to use
         :param lr: learning rate. defined at layer level, but can also be defined at model level
         """
+        logging.basicConfig()
+        logging.getLogger().setLevel(logging.DEBUG)
+        self.logger = logging.getLogger(__name__)
         self.layers = layers
         self.train = True
 
@@ -45,6 +48,7 @@ class Model:
 
     def __call__(self, x, target):
         if self.train:
+            self.logger.debug('---propagating forward---')
             assert len(target.shape) != 1, 'target variables cannot be stored in 1d tensor'
             for layer in self.layers:
                 x = layer(x)
@@ -57,6 +61,7 @@ class Model:
             return ret.squeeze(), x
 
     def backward(self):
+        self.logger.debug('---propagating backward---')
         self.loss.backward()
         for layer in reversed(self.layers):
             layer.backward()

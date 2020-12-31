@@ -36,9 +36,9 @@ if __name__ == '__main__':
 
     # model
     model = Model([
-        Linear(256, n_in=num_features),
+        Linear(128, n_in=num_features),
         Relu(),
-        Linear(256),
+        Linear(128),
         Relu(),
         Linear(num_classes)
     ], lr=0.01)
@@ -46,11 +46,11 @@ if __name__ == '__main__':
     print(model)
 
     # dataset
-    train_dataset = Dataset(x_train, y_train, bs=1)
+    train_dataset = Dataset(x_train, y_train, bs=16)
 
     # train model
     # epochs
-    for _ in range(15):
+    for _ in range(50):
         # batches
         for x_batch, y_batch in train_dataset:
             loss = model(x_batch, y_batch)
