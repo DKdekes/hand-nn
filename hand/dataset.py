@@ -17,14 +17,15 @@ class Dataset:
         return self
 
     def __next__(self):
-        if self.idx == len(self):
+        start = self.idx * self.bs
+        end = start + self.bs
+        if start > len(self):
             raise StopIteration
-        if self.idx > len(self):
-            self.idx = len(self)
-        x = self.x[self.idx:self.idx + self.bs]
-        y = self.y[self.idx:self.idx + self.bs]
-        if self.idx != len(self):
-            self.idx += self.bs
+        if end > len(self):
+            end = len(self)
+        x = self.x[start:end]
+        y = self.y[start:end]
+        self.idx += 1
         return x, y
 
     def __len__(self):
